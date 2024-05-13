@@ -1,0 +1,8 @@
+backup/
+test/
+*.ipynb
+smart_home_data.json
+reference.txt
+*.csv
+linux_CLI.txt
+
