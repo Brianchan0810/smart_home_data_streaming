@@ -43,7 +43,7 @@ Firstly, create a directory in HDFS for Hive external table
 $ hdfs dfs -mkdir -p /user/test_user/smart_home_iot_data
 ```
 
-Secondly, create a Hive external table with column "eventDate" as the partition key through hive beeline
+Secondly, create a Hive external table with column "eventDate" as the partition key through Hive beeline
 ```bash
 CREATE EXTERNAL TABLE smart_home_iot_ptb(
 eventTimestamp VARCHAR(30), energyConsumption DOUBLE, energyGeneration DOUBLE, weatherSummary VARCHAR(20), temperature DOUBLE, humidity DOUBLE, windSpeed DOUBLE, precipIntensity DOUBLE)
@@ -63,7 +63,11 @@ Looking into HDFS, partition folders of each date are created under the director
 ![Data Sample](screen_capture/hdfs_folder.PNG)
 ![Data Sample](screen_capture/parquet_data_file.PNG)
 
-Fifthly, run the command below through Hive beeline to let the Hive table recongize the newly created partition folders. After that, data can be queried from the Hive table.
+Fifthly, run the command below through Hive beeline to let the Hive table recongize the newly created partition folders. 
+```bash
+MSCK REPAIR TABLE smart_home_iot_ptb;
+```
+After that, data can be queried from the Hive table.
 ![Data Sample](screen_capture/data_in_hive_table.PNG)
 
 
