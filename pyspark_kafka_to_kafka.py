@@ -3,10 +3,10 @@ from pyspark.sql.functions import *
 
 json_schema = StructType([ \
 StructField('eventTimestamp', StringType(), True), \
-StructField('Energy', StructType([ \
+StructField('energy', StructType([ \
 StructField('consumption', DoubleType(), True), \
 StructField('generation', DoubleType(), True)]), True), \
-StructField('Weather', StructType([ \
+StructField('weather', StructType([ \
 StructField('overall', StringType(), True), \
 StructField('temperature', DoubleType(), True), \
 StructField('humidity', DoubleType(), True), \
@@ -27,7 +27,6 @@ raw_sdf = spark \
 	
 sdf = raw_sdf.withColumn("value", from_json(raw_sdf["value"], json_schema)).select("value.*")
 
-
 flattened_sdf = sdf \
     .selectExpr("cast(eventTimestamp as timestamp) as eventTimestamp", 
                 "Energy.consumption as energyConsumption", "Energy.generation as energyGeneration",
@@ -42,7 +41,6 @@ avgHumidity = flattened_sdf \
         window("eventTimestamp", "20 minutes", "5 minutes")
         ) \
     .agg(avg("humidity").alias("avg_humidity"))
-
 
 result = avgHumidity \
         .selectExpr( 
@@ -61,6 +59,6 @@ result.select("value") \
       .option("kafka.security.protocol","SASL_PLAINTEXT")\
       .option("kafka.sasl.mechanism", "GSSAPI") \
       .option("kafka.sasl.kerberos.service.name", "kafka")\
-      .option("checkpointLocation", "hdfs://nameservice1/user/andyhe/pyspark_checkpoint/cp2") \
+      .option("checkpointLocation", "hdfs://nameservice1/user/test_user/pyspark_checkpoint/load_to_kafka") \
       .start() \
       .awaitTermination()

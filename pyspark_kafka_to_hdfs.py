@@ -3,10 +3,10 @@ from pyspark.sql.functions import *
 
 json_schema = StructType([ \
 StructField('eventTimestamp', StringType(), True), \
-StructField('Energy', StructType([ \
+StructField('energy', StructType([ \
 StructField('consumption', DoubleType(), True), \
 StructField('generation', DoubleType(), True)]), True), \
-StructField('Weather', StructType([ \
+StructField('weather', StructType([ \
 StructField('overall', StringType(), True), \
 StructField('temperature', DoubleType(), True), \
 StructField('humidity', DoubleType(), True), \
@@ -41,6 +41,6 @@ flattened_sdf.writeStream \
    .outputMode("append") \
    .partitionBy("eventDate") \
    .format("parquet") \
-   .option("path", "hdfs://nameservice1/user/andyhe/smart_home_iot_data") \
-   .option("checkpointLocation", "hdfs://nameservice1/user/andyhe/pyspark_checkpoint/cp1") \
+   .option("path", "hdfs://nameservice1/user/test_user/smart_home_iot_data") \
+   .option("checkpointLocation", "hdfs://nameservice1/user/test_user/pyspark_checkpoint/load_to_hive") \
    .start()
