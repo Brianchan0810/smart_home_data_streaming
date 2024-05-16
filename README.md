@@ -25,7 +25,7 @@ The components involved and the corresponding version are stated as below:
 The data_preparation.py extracts one record per minute from the dataset and only keeps the parameters that we are interested in.
 
 The extracted data are output as JSON format which minic the structure of IoT data
-![Data Sample](screen_capture/data_sample.jpg)
+![Data Sample](screen_capture/data_sample.PNG)
 
 
 ## Streaming data source 
@@ -60,11 +60,11 @@ $ hdfs dfs -mkdir -p /user/test_user/pyspark_checkpoint/load_to_hive
 Forthly, run the pyspark_kafka_to_hdfs.py to stream the data to HDFS under the directory */user/test_user/smart_home_iot_data*
 
 Looking into HDFS, partition folders of each date are created under the directory */user/test_user/smart_home_iot_data* and the parquet data file are stored in corresponding date folder.
-![Data Sample](screen_capture/hdfs_folder.png)
-![Data Sample](screen_capture/parquet_data_file.png)
+![Data Sample](screen_capture/hdfs_folder.PNG)
+![Data Sample](screen_capture/parquet_data_file.PNG)
 
 Fifthly, run the command below through Hive beeline to let the Hive table recongize the newly created partition folders. After that, data can be queried from the Hive table.
-![Data Sample](screen_capture/data_in_hive_table.png)
+![Data Sample](screen_capture/data_in_hive_table.PNG)
 
 
 ## Load data to Kafka topic
@@ -79,10 +79,10 @@ $ hdfs dfs -mkdir -p /user/test_user/pyspark_checkpoint/load_to_kafka
 ```
 
 Next, run pyspark_kafka_to_kafka.py which takes the average of humidity over a 20mins sliding windows. Windows with average humidity greater than 70% (0.7) will then be published to Kafka topic smart_home_iot_sink.
-![Data Sample](screen_capture/kafka_data_with_filter.png)
+![Data Sample](screen_capture/kafka_data_with_filter.PNG)
 
 The screen capture below shows the data sent to Kafka topic if filter (avg humidity >70%) is not applied.
-![Data Sample](screen_capture/kafka_data_without_filter.png)
+![Data Sample](screen_capture/kafka_data_without_filter.PNG)
 
 People can then be alerted about the high humidity if they consume the Kafka topic.
 
