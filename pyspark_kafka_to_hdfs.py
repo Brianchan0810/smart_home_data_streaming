@@ -1,5 +1,10 @@
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("Pyspark streaming") \
+    .getOrCreate()
 
 json_schema = StructType([ \
 StructField('eventTimestamp', StringType(), True), \
@@ -43,4 +48,5 @@ flattened_sdf.writeStream \
    .format("parquet") \
    .option("path", "hdfs://nameservice1/user/test_user/smart_home_iot_data") \
    .option("checkpointLocation", "hdfs://nameservice1/user/test_user/pyspark_checkpoint/load_to_hive") \
-   .start()
+   .start() \
+   .awaitTermination()

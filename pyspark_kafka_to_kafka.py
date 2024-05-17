@@ -1,5 +1,10 @@
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("Pyspark streaming") \
+    .getOrCreate()
 
 json_schema = StructType([ \
 StructField('eventTimestamp', StringType(), True), \
@@ -21,7 +26,7 @@ raw_sdf = spark \
     .option("kafka.sasl.mechanism", "GSSAPI") \
     .option("kafka.sasl.kerberos.service.name", "kafka")\
 	.option('subscribe','smart_home_iot_source')\
-    .option("startingOffsets", "earliest") \
+    .option("startingOffsets", "latest") \
     .load() \
     .selectExpr("CAST(value AS STRING)")
 	

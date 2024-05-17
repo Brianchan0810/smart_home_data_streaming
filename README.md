@@ -35,6 +35,9 @@ $ export KAFKA_OPTS="-Djava.security.auth.login.config=./kafka/jaas.config"
 $ kafka-topics --create --partitions 3 factor 1 --topic smart_home_iot_source --bootstrap-server server1:9092 --command-config ./kafka/client.properties 
 ```
 After that, run the producer.py which reads the records from the json file and publishs them to the Kafka topic "smart_home_iot_source".
+```bash
+$ python3 producer.py
+```
 
 
 ## Load data to Hive table
@@ -58,6 +61,15 @@ $ hdfs dfs -mkdir -p /user/test_user/pyspark_checkpoint/load_to_hive
 ```
 
 Forthly, run the pyspark_kafka_to_hdfs.py to stream the data to HDFS under the directory */user/test_user/smart_home_iot_data*
+```bash
+$ spark-submit \
+--master yarn \
+--deploy-mode cluster \
+--files /tmp/jaas.config,/tmp/kafka.keytab \
+--conf spark.driver.extraJavaOptions="-Djava.security.auth.login.config=/tmp/jaas.config" \
+--conf spark.executor.extraJavaOptions="-Djava.security.auth.login.config=jaas.config" \
+pyspark_kafka_to_hdfs.py
+```
 
 Looking into HDFS, partition folders of each date are created under the directory */user/test_user/smart_home_iot_data* and the parquet data file are stored in corresponding date folder.
 ![Data Sample](screen_capture/hdfs_folder.PNG)
@@ -83,6 +95,15 @@ $ hdfs dfs -mkdir -p /user/test_user/pyspark_checkpoint/load_to_kafka
 ```
 
 Next, run pyspark_kafka_to_kafka.py which takes the average of humidity over a 20mins sliding windows. Windows with average humidity greater than 70% (0.7) will then be published to Kafka topic smart_home_iot_sink.
+```bash
+$ spark-submit \
+--master yarn \
+--deploy-mode cluster \
+--files /tmp/jaas.config,/tmp/kafka.keytab \
+--conf spark.driver.extraJavaOptions="-Djava.security.auth.login.config=/tmp/jaas.config" \
+--conf spark.executor.extraJavaOptions="-Djava.security.auth.login.config=jaas.config" \
+pyspark_kafka_to_kafka.py
+```
 ![Data Sample](screen_capture/kafka_data_with_filter.PNG)
 
 The screen capture below shows the data sent to Kafka topic if filter (avg humidity >70%) is not applied.
